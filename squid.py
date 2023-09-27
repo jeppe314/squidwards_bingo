@@ -43,25 +43,32 @@ class BingoBoard:
                 if not cell["selected"]:
                     not_selected_numbers += cell["number"]
         score = last_num * not_selected_numbers
-        print(last_num, " * ", not_selected_numbers, " = ", score)
+        print("Score: ", last_num, " * ", not_selected_numbers, " = ", score, "\n")
         return score
 
 
     # Defines the string
     def __str__(self):
-        board_str = ""
+        border = "█" * 23  # Border made of solid blocks
+        text = "Bingolotto".center(19)  # Centered text
+        board_str = f"\033[44m{border}\033[0m\n"  # ANSI escape code for background color
+        board_str += f"\033[44m█ {text} █\033[0m\n"  # Top border with centered text
+        board_str += f"\033[44m{border}\033[0m\n"  # ANSI escape code for background color
         for row in self.grid:
+            board_str += "█ "  # Left border
             for cell in row:
                 number = cell["number"]
                 selected = cell["selected"]
                 if selected:
-                    # ANSI escape code for red text
-                    colored_number = f"\033[91m{number:^3}\033[0m"
+                    # ANSI escape code for red text on blue background
+                    colored_number = f"\033[91;44m{number:^3}\033[0m"
                 else:
                     colored_number = f"{number:^3}"
                 board_str += colored_number + " "
-            board_str += "\n"
+            board_str += "█\n"  # Right border
+        board_str += f"\033[44m{border}\033[0m\n"  # ANSI escape code for background color
         return board_str
+
 
 # Create BingoBoards from the data
 bingo_boards = [BingoBoard(board_data) for board_data in board_data]
@@ -78,10 +85,8 @@ def playBingo():
                 #If it doesnt have bingo we mark the number and see if that gave us bingo
                 board.mark_number(drawnNumber)
                 if(board.has_bingo()):
-                    print("B-I-N-G-O! BINGO!")
                     print(board)
-                    score = board.bingo_score(drawnNumber)
-                    print("Winning score: ", score)
+                    board.bingo_score(drawnNumber)
                     bingo_winners.append(board)
         
 playBingo()
