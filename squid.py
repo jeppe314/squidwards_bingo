@@ -55,9 +55,11 @@ class BingoBoard:
                 number = cell["number"]
                 selected = cell["selected"]
                 if selected:
-                    board_str += f"[{number:^3}] "
+                    # ANSI escape code for red text
+                    colored_number = f"\033[91m{number:^3}\033[0m"
                 else:
-                    board_str += f"{number:^3} "
+                    colored_number = f"{number:^3}"
+                board_str += colored_number + " "
             board_str += "\n"
         return board_str
 
@@ -81,7 +83,5 @@ def playBingo():
                     score = board.bingo_score(drawnNumber)
                     print("Winning score: ", score)
                     bingo_winners.append(board)
-        print("Numbers of winners: ", len(bingo_winners))
-        
         
 playBingo()
